@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Home",
+    "link": "/"
+  },
+  {
+    "name": "People",
+    "link": "/people"
+  },
+  {
+    "name": "Planets",
+    "link": "/planets"
+  },
+  {
+    "name": "Starships",
+    "link": "/starships"
+  },
+  {
+    "name": "Vehicles",
+    "link": "/vehicles"
+  },
+  {
+    "name": "Species",
+    "link": "/species"
+  },
+  {
+    "name": "Films",
+    "link": "/films"
+  },
+  {
+    "name": "Favorites",
+    "link": "/favorites"
+  },
+  {
+    "name": "GalacticTrade",
+    "link": "/galactic-trade"
+  }
+]
