@@ -5,31 +5,19 @@ import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import React from "react";
 import { styled } from "@mui/system";
-import { ICardProps } from "types/common";
-import { useNavigate } from "react-router-dom";
+import { IDetailedCardProps } from "types/common";
 
-export const SmallCard: React.FC<ICardProps> = ({
-  type,
-  id,
+export const DetailedCard: React.FC<IDetailedCardProps> = ({
   name,
-  age,
   imageUrl,
+  data,
 }) => {
-  const navigate = useNavigate();
-
   return (
-    <StyledCard onClick={() => navigate(`/${type}/${id}`)}>
+    <StyledCard>
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <CardContent sx={{ flex: "1 0 auto", width: 100 }}>
           <Typography component="div" variant="h5">
             {name}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            color="text.secondary"
-            component="div"
-          >
-            {age}
           </Typography>
         </CardContent>
       </Box>
