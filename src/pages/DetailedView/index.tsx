@@ -1,28 +1,35 @@
-import { useEntityContext } from "contexts/entity";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { IDetailedViewProps } from "types/common";
 import axios from "axios";
 import { DetailedCard } from "components/Common/DetailedCard";
+import { CircularProgress } from "@mui/material";
 
-const DetailedView: React.FC<IDetailedViewProps> = () => {
-  // Use the useParams hook to get the parameters from the URL
+const DetailedView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { currentEntity, setCurrentEntity } = useEntityContext();
+  const [entity, setEntity] = useState<any | null>(null);
+
   useEffect(() => {
-    if (currentEntity?.id !== id) {
-      axios
-        .get(`https://swapi.dev/api${window.location.pathname}`)
-        .then((res) => setCurrentEntity(res.data.results));
-    }
+    fetchData();
   }, []);
 
+  const fetchData = () => {
+    axios
+      .get(`https://swapi.dev/api${window.location.pathname}`)
+      .then((response) => setEntity(response.data));
+  };
+
   return (
-    <div>
-      {currentEntity && (
-        <DetailedCard name={currentEntity.name} imageUrl="fasfAS" />
+    <>
+      {entity ? (
+        <DetailedCard
+          name={entity.name}
+          imageUrl={`https://starwars-visualguide.com/assets/img/characters/${id}.jpg`}
+          data={entity}
+        />
+      ) : (
+        <CircularProgress style={{ margin: "20px auto", display: "block" }} />
       )}
-    </div>
+    </>
   );
 };
 

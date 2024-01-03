@@ -15,5 +15,5 @@ export interface IDetailedCardProps {
 export interface IDetailedViewProps {}
 
 export interface IEntity {
-  [key: string]: string | number;
+  [key: string]: string;
 }

@@ -3,6 +3,7 @@ import axios from "axios";
 import { Container, Grid, CircularProgress, Button } from "@mui/material";
 import { SmallCard } from "components/Common/SmallCard";
 import { useEntityContext } from "contexts/entity";
+import { getId } from "utils/getId";
 
 const imgURL = "https://starwars-visualguide.com/assets/img/characters/";
 
@@ -40,11 +41,6 @@ const PeoplePage: React.FC = () => {
       });
   };
 
-  //getting the id from the api endpoint
-  function getId(url: string) {
-    return url.split("/")[url.split("/").length - 2];
-  }
-
   const handleLoadMore = () => {
     if (nextPage) {
       fetchData(nextPage);
@@ -55,7 +51,15 @@ const PeoplePage: React.FC = () => {
     <Container>
       <Grid container spacing={2} mt={10}>
         {people.map((person: any) => (
-          <Grid key={person.name} item xs={12} sm={6} md={4} lg={3} onClick={() => setCurrentEntity(person)}>
+          <Grid
+            key={person.name}
+            item
+            xs={12}
+            sm={6}
+            md={4}
+            lg={3}
+            onClick={() => setCurrentEntity(person)}
+          >
             <SmallCard
               id={getId(person.url)}
               type="people"
