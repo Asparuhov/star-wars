@@ -1,21 +1,15 @@
-import { useEffect, useState, ReactNode } from "react";
+import React from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import React from "react";
 import { styled } from "@mui/system";
 import { IDetailedCardProps } from "types/common";
-import axios from "axios";
-
-// Styled components
-const ArrayContainer = styled("div")({
-  border: "1px solid #ccc",
-  padding: 8,
-  margin: "8px 0",
-  width: "100%", // Set a fixed width
-});
+import { useNavigate } from "react-router-dom";
+import missingImageSrc from "assets/missingImage.jpg";
+import useDetailedCard from "utils/hooks/useDetailedCard";
+import { formatPropertyName } from "utils/formatPropertyName";
 
 const ArrayBoxes = styled("div")({
   display: "flex",
@@ -32,34 +26,28 @@ export const DetailedCard: React.FC<IDetailedCardProps> = ({
   imageUrl,
   data,
 }) => {
-  const formatPropertyName = (propertyName: string) => {
-    return propertyName
-      .split("_")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-  };
+  // Hooks
+  const navigate = useNavigate();
 
-  const renderProperty = (key: string, value: string | any[]) => {
+  const { fetchedEntities } = useDetailedCard(data);
+
+  // Render individual property based on key and value
+  const renderProperty = (key: string, value: any) => {
     if (key === "url" || typeof value === "object") {
       return null;
     }
 
-    if (key === "height") {
+    if (key === "height" || key === "mass") {
       return (
         <Typography key={key}>
-          {`${formatPropertyName(key)}: ${value} cm`}
+          {`${formatPropertyName(key)}: ${value} ${
+            key === "height" ? "cm" : "kg"
+          }`}
         </Typography>
       );
-    } else if (key === "mass") {
-      return (
-        <Typography key={key}>
-          {`${formatPropertyName(key)}: ${value} kg`}
-        </Typography>
-      );
-    } else if (
-      (key === "created" || key === "edited") &&
-      typeof value === "string"
-    ) {
+    }
+
+    if ((key === "created" || key === "edited") && typeof value === "string") {
       const date = new Date(value);
       return (
         <Typography key={key}>
@@ -68,81 +56,39 @@ export const DetailedCard: React.FC<IDetailedCardProps> = ({
           }-${date.getFullYear()}`}
         </Typography>
       );
-    } else if (
-      typeof value === "string" &&
-      value.toLowerCase().includes("https://")
-    ) {
+    }
+
+    if (typeof value === "string" && value.toLowerCase().includes("https://")) {
+      // Render hyperlinks for URLs
       return (
         <Typography key={key}>
           {`${formatPropertyName(key)}: `}
-          <a href={value} target="_blank" rel="noopener noreferrer">
+          <Typography
+            color="secondary"
+            sx={{ display: "inline", ":hover": { cursor: "pointer" } }}
+            onClick={() => {
+              // Navigate to the linked entity and reload the page
+              navigate(
+                `/${value.split("/").filter(Boolean).slice(3).join("/")}`
+              );
+              window.location.reload();
+            }}
+          >
             View Entity
-          </a>
+          </Typography>
         </Typography>
       );
-    } else {
-      return (
-        <Typography key={key}>{`${formatPropertyName(
-          key
-        )}: ${value}`}</Typography>
-      );
     }
+
+    // Default case for other properties
+    return (
+      <Typography key={key}>{`${formatPropertyName(
+        key
+      )}: ${value}`}</Typography>
+    );
   };
 
-  const [fetchedEntities, setFetchedEntities] = useState<ReactNode[]>([]);
-
-  const fetchAndRenderEntities = async () => {
-    const entityPromises = Object.entries(data)
-      .filter(
-        ([key, value]) =>
-          Array.isArray(value) && value.length > 0 && key !== "films"
-      )
-      .map(async ([key, value]) => {
-        const entitiesData = await Promise.all(
-          value.map(async (endpoint: string) => {
-            try {
-              const response = await axios.get(endpoint);
-              return response.data;
-            } catch (error) {
-              console.error(`Error fetching ${key} data:`, error);
-              return null;
-            }
-          })
-        );
-
-        const entities = entitiesData
-          .filter((data) => data !== null)
-          .map((data, index) => (
-            <Typography key={index}>
-              {`${index + 1}. `}
-              {`${data.name} - `}
-              <a href={value[index]} target="_blank" rel="noopener noreferrer">
-                ViewEntity
-              </a>
-            </Typography>
-          ));
-
-        return (
-          <ArrayContainer key={key}>
-            <Typography variant="h6">{formatPropertyName(key)}</Typography>
-            {entities.length > 0 ? entities : "No entities available"}
-          </ArrayContainer>
-        );
-      });
-
-    setFetchedEntities(await Promise.all(entityPromises));
-  };
-
-  const StyledCard = styled(Card)({
-    display: "flex",
-    maxWidth: 600,
-  });
-
-  useEffect(() => {
-    // Fetch entities when the component mounts
-    fetchAndRenderEntities();
-  }, []);
-
+  // Component JSX
   return (
     <div className="detailed-card-container">
       <StyledCard>
@@ -151,19 +97,30 @@ export const DetailedCard: React.FC<IDetailedCardProps> = ({
             <Typography component="div" variant="h5">
               {name}
             </Typography>
+            {/* Render properties */}
             {Object.entries(data).map(([key, value]) =>
               renderProperty(key, value)
             )}
           </CardContent>
         </Box>
+        {/* Display image with error handling */}
         <CardMedia
           component="img"
           sx={{ width: 250 }}
           image={imageUrl}
           alt="Live from space album cover"
+          onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+            const target = e.target as HTMLImageElement;
+            target.src = missingImageSrc;
+          }}
         />
       </StyledCard>
-      {fetchedEntities.length > 0 && <ArrayBoxes>{fetchedEntities}</ArrayBoxes>}
+      {<ArrayBoxes>{fetchedEntities}</ArrayBoxes>}
     </div>
   );
 };
+
+const StyledCard = styled(Card)({
+  display: "flex",
+  maxWidth: 600,
+});

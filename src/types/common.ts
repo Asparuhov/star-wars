@@ -9,7 +9,7 @@ export interface ICardProps {
 export interface IDetailedCardProps {
   name: string;
   imageUrl: string;
-  [key: string]: string | number;
+  [key: string]: any;
 }
 
 export interface IDetailedViewProps {}
