@@ -77,7 +77,10 @@ const EntityPage: React.FC<EntityPageProps> = ({
         ))}
       </Grid>
       {loadingMore && (
-        <CircularProgress style={{ margin: "20px auto", display: "block" }} size={100}/>
+        <CircularProgress
+          style={{ margin: "20px auto", display: "block" }}
+          size={100}
+        />
       )}
       {nextPage && !loadingMore && (
         <Button

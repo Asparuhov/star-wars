@@ -11,24 +11,12 @@ import missingImageSrc from "assets/missingImage.jpg";
 import useDetailedCard from "utils/hooks/useDetailedCard";
 import { formatPropertyName } from "utils/formatPropertyName";
 
-const ArrayBoxes = styled("div")({
-  display: "flex",
-  flexWrap: "wrap",
-  gap: 20,
-  width: "100%",
-  paddingTop: 20,
-  boxSizing: "border-box", // Include padding in the width calculation
-});
-
-// Component
 export const DetailedCard: React.FC<IDetailedCardProps> = ({
   name,
   imageUrl,
   data,
 }) => {
-  // Hooks
   const navigate = useNavigate();
-
   const { fetchedEntities } = useDetailedCard(data);
 
   // Render individual property based on key and value
@@ -80,7 +68,6 @@ export const DetailedCard: React.FC<IDetailedCardProps> = ({
       );
     }
 
-    // Default case for other properties
     return (
       <Typography key={key}>{`${formatPropertyName(
         key
@@ -88,25 +75,22 @@ export const DetailedCard: React.FC<IDetailedCardProps> = ({
     );
   };
 
-  // Component JSX
   return (
     <div className="detailed-card-container">
       <StyledCard>
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <CardContent sx={{ flex: "1 0 auto", width: 300 }}>
-            <Typography component="div" variant="h5">
-              {name}
-            </Typography>
-            {/* Render properties */}
-            {Object.entries(data).map(([key, value]) =>
-              renderProperty(key, value)
-            )}
-          </CardContent>
-        </Box>
+        <CardContent sx={{ flex: "1 0 auto" }}>
+          <Typography component="div" variant="h5" textAlign="center">
+            {name}
+          </Typography>
+          {/* Render properties */}
+          {Object.entries(data).map(([key, value]) =>
+            renderProperty(key, value)
+          )}
+        </CardContent>
         {/* Display image with error handling */}
         <CardMedia
           component="img"
-          sx={{ width: 250 }}
+          sx={{ width: 250, paddingTop: { xs: 2, sm: 0 } }}
           image={imageUrl}
           alt="Live from space album cover"
           onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
@@ -120,7 +104,29 @@ export const DetailedCard: React.FC<IDetailedCardProps> = ({
   );
 };
 
-const StyledCard = styled(Card)({
+const StyledCard = styled(Card)(({ theme }) => ({
   display: "flex",
+  flexDirection: "row", // Display in a row on large screens
+  alignItems: "center", // Center items vertically
   maxWidth: 600,
-});
+  margin: "0 auto", // Center the card horizontally
+  [theme.breakpoints.down("sm")]: {
+    flexDirection: "column",
+    margin: "100px 40px 0px 40px",
+    padding: 20, // Stack items vertically on small screens
+  },
+}));
+
+const ArrayBoxes = styled("div")(({ theme }) => ({
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: 20,
+  paddingTop: 20,
+  boxSizing: "border-box", // Include padding in the width calculation
+  margin: 0,
+  [theme.breakpoints.down("sm")]: {
+    margin: "0px 40px 0px 40px",
+  },
+}));

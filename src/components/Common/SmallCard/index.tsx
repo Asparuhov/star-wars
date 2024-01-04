@@ -21,7 +21,7 @@ export const SmallCard: React.FC<ICardProps> = ({
   return (
     <StyledCard onClick={() => navigate(`/${type}/${id}`)}>
       <Box sx={{ display: "flex", flexDirection: "column" }}>
-        <CardContent sx={{ flex: "1 0 auto", width: 100 }}>
+        <CardContent sx={{ flex: "1 0 auto", width: 150 }}>
           <Typography component="div" variant="body1">
             {name}
           </Typography>
@@ -50,7 +50,7 @@ export const SmallCard: React.FC<ICardProps> = ({
 
 const StyledCard = styled(Card)({
   display: "flex",
-  maxWidth: 300,
+  maxWidth: 301,
   transition: "transform 0.2s", // Add smooth transition for the zoom effect
   ":hover": {
     transform: "scale(1.1)", // Zoom in by 10% on hover
