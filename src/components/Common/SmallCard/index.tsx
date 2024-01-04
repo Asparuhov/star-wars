@@ -7,6 +7,7 @@ import React from "react";
 import { styled } from "@mui/system";
 import { ICardProps } from "types/common";
 import { useNavigate } from "react-router-dom";
+import missingImageSrc from "assets/missingImage.jpg";
 
 export const SmallCard: React.FC<ICardProps> = ({
   type,
@@ -21,7 +22,7 @@ export const SmallCard: React.FC<ICardProps> = ({
     <StyledCard onClick={() => navigate(`/${type}/${id}`)}>
       <Box sx={{ display: "flex", flexDirection: "column" }}>
         <CardContent sx={{ flex: "1 0 auto", width: 100 }}>
-          <Typography component="div" variant="h5">
+          <Typography component="div" variant="body1">
             {name}
           </Typography>
           <Typography
@@ -35,9 +36,13 @@ export const SmallCard: React.FC<ICardProps> = ({
       </Box>
       <CardMedia
         component="img"
-        sx={{ width: 151 }}
+        sx={{ width: 151, height: 151 }}
         image={imageUrl}
-        alt="Live from space album cover"
+        alt={name}
+        onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+          const target = e.target as HTMLImageElement;
+          target.src = missingImageSrc;
+        }}
       />
     </StyledCard>
   );

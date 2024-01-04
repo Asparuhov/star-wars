@@ -5,8 +5,8 @@ import { DetailedCard } from "components/Common/DetailedCard";
 import { CircularProgress } from "@mui/material";
 
 const DetailedView: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const [entity, setEntity] = useState<any | null>(null);
+  const { entity, id } = useParams<{ entity: string; id: string }>();
+  const [currentEntity, setCurrentEntity] = useState<any | null>(null);
 
   useEffect(() => {
     fetchData();
@@ -15,19 +15,24 @@ const DetailedView: React.FC = () => {
   const fetchData = () => {
     axios
       .get(`https://swapi.dev/api${window.location.pathname}`)
-      .then((response) => setEntity(response.data));
+      .then((response) => setCurrentEntity(response.data));
   };
 
   return (
     <>
-      {entity ? (
+      {currentEntity ? (
         <DetailedCard
-          name={entity.name}
-          imageUrl={`https://starwars-visualguide.com/assets/img/characters/${id}.jpg`}
-          data={entity}
+          name={currentEntity.name}
+          imageUrl={`https://starwars-visualguide.com/assets/img/${
+            entity === "people" ? "characters" : entity
+          }/${id}.jpg`}
+          data={currentEntity}
         />
       ) : (
-        <CircularProgress style={{ margin: "20px auto", display: "block" }} />
+        <CircularProgress
+          style={{ margin: "20px auto", display: "block" }}
+          size={100}
+        />
       )}
     </>
   );

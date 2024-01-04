@@ -1,9 +1,16 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
+import EntitiesList from "components/Common/EntitiesList";
+
+const imgURL = "https://starwars-visualguide.com/assets/img/planets/";
 
 const PlanetsPage: React.FC = () => {
-  const [people, setPeople] = useState();
-
-  return <div>PlanetsPage</div>;
+  return (
+    <EntitiesList
+      entityType="planets"
+      dataUrl="https://swapi.dev/api/planets"
+      imgUrl={imgURL}
+    />
+  );
 };
+
 export default PlanetsPage;

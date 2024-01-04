@@ -5,6 +5,8 @@ import Starships from "./Starships";
 import Favorites from "./Favorites";
 import GalacticTrade from "./GalacticTrade";
 import DetailedView from "./DetailedView";
+import Vehicles from "./Vehicles";
+import Species from "./Species";
 
 //Helper function to export pages for cleaner App component
 const getPages = () => ({
@@ -14,7 +16,9 @@ const getPages = () => ({
   Starships,
   Favorites,
   GalacticTrade,
-  DetailedView
+  DetailedView,
+  Vehicles,
+  Species,
 });
 
 export default getPages;
