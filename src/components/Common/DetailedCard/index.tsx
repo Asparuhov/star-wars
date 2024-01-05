@@ -4,14 +4,17 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/system";
-import { IDetailedCardProps } from "types/common";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useNavigate } from "react-router-dom";
+import useFavorites from "utils/hooks/useFavorites"; // Update with the correct path
+import { IDetailedCardProps } from "types/common";
 import missingImageSrc from "assets/missingImage.jpg";
 import useDetailedCard from "utils/hooks/useDetailedCard";
 import { formatPropertyName } from "utils/formatPropertyName";
 
 // This component represents a detailed card displaying information about a specific entity.
-export const DetailedCard: React.FC<IDetailedCardProps> = ({
+const DetailedCard: React.FC<IDetailedCardProps> = ({
   name,
   imageUrl,
   data,
@@ -20,6 +23,8 @@ export const DetailedCard: React.FC<IDetailedCardProps> = ({
   const navigate = useNavigate();
   // Custom hook to fetch related entities for this detailed card
   const { fetchedEntities } = useDetailedCard(data);
+  // Custom hook for handling favorites
+  const { isFavorite, addToFavorites, removeFromFavorites } = useFavorites();
 
   // Render individual property based on key and value
   const renderProperty = (key: string, value: any) => {
@@ -84,8 +89,23 @@ export const DetailedCard: React.FC<IDetailedCardProps> = ({
   // JSX structure for the detailed card component
   return (
     <>
-      {/* Main detailed card */}
       <StyledCard>
+        {/* Top-right corner icons for favorites */}
+        <FavoriteIcons>
+          {isFavorite(data) ? (
+            <FavoriteIcon
+              color="error"
+              sx={{ cursor: "pointer" }}
+              onClick={() => removeFromFavorites(data)}
+            />
+          ) : (
+            <FavoriteBorderIcon
+              color="error"
+              sx={{ cursor: "pointer" }}
+              onClick={() => addToFavorites(data)}
+            />
+          )}
+        </FavoriteIcons>
         {/* Card content section */}
         <CardContent sx={{ flex: "1 0 auto" }}>
           <Typography component="div" variant="h5" textAlign="center">
@@ -96,6 +116,7 @@ export const DetailedCard: React.FC<IDetailedCardProps> = ({
             renderProperty(key, value)
           )}
         </CardContent>
+
         {/* Display image with error handling */}
         <CardMedia
           component="img"
@@ -144,3 +165,18 @@ const ArrayBoxes = styled("div")(({ theme }) => ({
     margin: "0px 40px 0px 40px",
   },
 }));
+
+// Styling for the top-right corner icons
+const FavoriteIcons = styled("div")(({ theme }) => ({
+  position: "relative",
+  top: 0,
+  right: 0,
+  [theme.breakpoints.up("sm")]: {
+    right: 0,
+    left: 300,
+    top: 130,
+  },
+  padding: "8px",
+  display: "inline",
+}));
+export default DetailedCard;

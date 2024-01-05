@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { DetailedCard } from "components/Common/DetailedCard";
+import DetailedCard from "components/Common/DetailedCard";
 import { CircularProgress } from "@mui/material";
 
 const DetailedView: React.FC = () => {
