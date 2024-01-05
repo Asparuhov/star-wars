@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import getPages from "pages";
-import Header from "components/header";
+import { Header } from "components/header";
 
 const App: React.FC = () => {
   const Pages = getPages();

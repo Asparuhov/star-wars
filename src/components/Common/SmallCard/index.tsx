@@ -54,6 +54,7 @@ const StyledCard = styled(Card)({
   maxWidth: 301,
   transition: "transform 0.2s", // Add smooth transition for the zoom effect
   margin: "auto",
+  marginBottom: 30,
   ":hover": {
     transform: "scale(1.1)", // Zoom in by 10% on hover
     cursor: "pointer",
