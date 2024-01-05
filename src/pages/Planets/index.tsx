@@ -9,6 +9,7 @@ const PlanetsPage: React.FC = () => {
       entityType="planets"
       dataUrl="https://swapi.dev/api/planets"
       imgUrl={imgURL}
+      fetchDataOnMount={true}
     />
   );
 };

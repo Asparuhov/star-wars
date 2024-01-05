@@ -17,3 +17,14 @@ export interface IDetailedViewProps {}
 export interface IEntity {
   [key: string]: string;
 }
+
+export enum currencies {
+  GALACTICCREDITS = "GalacticCredits",
+  WUPIUPI = "Wupiupi",
+  PEGGATS = "Peggats",
+}
+
+export interface IChartProps {
+  currency: string;
+  exchangeRates: Record<string, number>;
+}

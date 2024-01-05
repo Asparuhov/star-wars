@@ -8,6 +8,7 @@ const PeoplePage = () => {
       entityType="people"
       dataUrl="https://swapi.dev/api/people"
       imgUrl={imgURL}
+      fetchDataOnMount={true}
     />
   );
 };

@@ -9,6 +9,7 @@ const SpeciesPage: React.FC = () => {
       entityType="species"
       dataUrl="https://swapi.dev/api/species"
       imgUrl={imgURL}
+      fetchDataOnMount={true}
     />
   );
 };

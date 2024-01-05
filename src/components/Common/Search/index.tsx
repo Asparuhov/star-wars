@@ -1,10 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { styled, alpha } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
-import { Typography, Container } from "@mui/material";
+import { Container } from "@mui/material";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import PublicIcon from "@mui/icons-material/Public";
 import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
@@ -57,28 +57,28 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const SearchBar: React.FC = () => {
   const [searchMode, setSearchMode] = useState("People");
-  const [searchValue, setSearchValue] = useState("");
   const [searchResults, setSearchResults] = useState<any[]>([]);
+  const searchValueRef = useRef<string | null>(null);
   const [searchTriggered, setSearchTriggered] = useState(false);
+  const [searchButtonClicked, setSearchButtonClicked] = useState(false); // New state
 
   const handleModeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSearchMode(event.target.value as string);
-  };
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(event.target.value);
+    setSearchButtonClicked(false); // Reset the search button click status
   };
 
   const handleSearch = () => {
-    if (searchMode !== "All" && searchValue.trim() !== "") {
-      const endpoint = `${apiEndpoints[searchMode]}?search=${searchValue}`;
-      setSearchValue("");
+    if (
+      searchMode !== "All" &&
+      searchValueRef.current &&
+      searchValueRef.current.trim() !== ""
+    ) {
+      const endpoint = `${apiEndpoints[searchMode]}?search=${searchValueRef.current}`;
       fetch(endpoint)
         .then((response) => response.json())
         .then((data) => {
           setSearchResults(data.results || []);
           setSearchTriggered(true);
-          // Clear the search input
         })
         .catch((error) => {
           console.error("Error fetching search results:", error);
@@ -87,6 +87,8 @@ const SearchBar: React.FC = () => {
       setSearchResults([]);
       setSearchTriggered(true);
     }
+
+    setSearchButtonClicked(true); // Set search button click status to true
   };
 
   return (
@@ -95,8 +97,9 @@ const SearchBar: React.FC = () => {
         <StyledInputBase
           placeholder={`Search ${searchMode.toLowerCase()}...`}
           inputProps={{ "aria-label": "search" }}
-          value={searchValue}
-          onChange={handleInputChange}
+          onChange={(event) => {
+            searchValueRef.current = event.target.value;
+          }}
         />
         <Select
           value={searchMode}
@@ -123,13 +126,6 @@ const SearchBar: React.FC = () => {
           Search
         </Button>
       </SearchWrapper>
-      {searchTriggered && (
-        <EntitiesList
-          entityType={searchMode}
-          dataUrl={`${apiEndpoints[searchMode]}?search=${searchValue}`}
-          imgUrl={"imgUR"}
-        />
-      )}
       {searchResults.length > 0 && (
         <div
           style={{
@@ -142,6 +138,14 @@ const SearchBar: React.FC = () => {
           }}
         ></div>
       )}
+      <EntitiesList
+        entityType={searchMode}
+        dataUrl={`${apiEndpoints[searchMode]}?search=${
+          searchValueRef.current || ""
+        }`}
+        imgUrl={"imgUR"}
+        searchTriggered={searchTriggered && searchButtonClicked} // Check both conditions
+      />
     </Container>
   );
 };

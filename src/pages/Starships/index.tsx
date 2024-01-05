@@ -9,6 +9,7 @@ const StarshipsPage: React.FC = () => {
       entityType="starships"
       dataUrl="https://swapi.dev/api/starships"
       imgUrl={imgURL}
+      fetchDataOnMount={true}
     />
   );
 };

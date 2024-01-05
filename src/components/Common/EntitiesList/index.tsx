@@ -5,16 +5,20 @@ import { SmallCard } from "components/Common/SmallCard";
 import { useEntityContext } from "contexts/entity";
 import { getId } from "utils/getId";
 
-interface EntityPageProps {
+interface EntitiesListProps {
   entityType: string;
   dataUrl: string;
   imgUrl: string;
+  searchTriggered?: boolean;
+  fetchDataOnMount?: boolean; // New prop for fetching data on mount
 }
 
-const EntityPage: React.FC<EntityPageProps> = ({
+const EntitiesList: React.FC<EntitiesListProps> = ({
   entityType,
   dataUrl,
   imgUrl,
+  searchTriggered = false,
+  fetchDataOnMount = false, // Set to false by default
 }) => {
   const [entities, setEntities] = useState<Array<any>>([]);
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
@@ -22,8 +26,16 @@ const EntityPage: React.FC<EntityPageProps> = ({
   const { setCurrentEntity } = useEntityContext();
 
   useEffect(() => {
-    fetchData(dataUrl);
-  }, [dataUrl]);
+    if (fetchDataOnMount) {
+      // Fetch data on mount
+      fetchData(dataUrl);
+    } else if (searchTriggered) {
+      // Clear entities when search is triggered
+      setEntities([]);
+      setNextPage(null);
+      fetchData(dataUrl);
+    }
+  }, [dataUrl, searchTriggered, fetchDataOnMount]);
 
   const fetchData = (url: string) => {
     setLoadingMore(true);
@@ -98,4 +110,4 @@ const EntityPage: React.FC<EntityPageProps> = ({
   );
 };
 
-export default EntityPage;
+export default EntitiesList;
