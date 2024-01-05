@@ -1,14 +1,14 @@
 
 # WELCOME TO THE STAR WARS UNIVERSE
 
-### This project is all about the star wars universe, you can explore different people, planets, species, starships, vehicles, the relations between them, which person which vehicles owns, which planet is someone from, the statistics of the planet, population etc. and many many more. If you are a Star Wars fan, this applicaiton could keep you occupied for hours.
+### This project is all about the star wars universe, you can explore different people, planets, species, starships, vehicles, the relations between them, which person owns which vehicles, which planet is someone from, the statistics of the planet, population etc. and many many more. If you are a Star Wars fan, this applicaiton could keep you occupied for hours.
 
 ## Technologies:
 
 ### Initialization:
 The project is initialized using the refine.dev framework
 
-###C ore logic:
+### Core logic:
 The size is written on React with Typescript
 
 ### UI:
