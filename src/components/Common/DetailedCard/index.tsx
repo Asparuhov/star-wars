@@ -76,7 +76,7 @@ export const DetailedCard: React.FC<IDetailedCardProps> = ({
   };
 
   return (
-    <div className="detailed-card-container">
+    <>
       <StyledCard>
         <CardContent sx={{ flex: "1 0 auto" }}>
           <Typography component="div" variant="h5" textAlign="center">
@@ -100,7 +100,7 @@ export const DetailedCard: React.FC<IDetailedCardProps> = ({
         />
       </StyledCard>
       {<ArrayBoxes>{fetchedEntities}</ArrayBoxes>}
-    </div>
+    </>
   );
 };
 
@@ -110,6 +110,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
   alignItems: "center", // Center items vertically
   maxWidth: 600,
   margin: "0 auto", // Center the card horizontally
+  marginTop: 100,
   [theme.breakpoints.down("sm")]: {
     flexDirection: "column",
     margin: "100px 40px 0px 40px",
@@ -125,7 +126,8 @@ const ArrayBoxes = styled("div")(({ theme }) => ({
   gap: 20,
   paddingTop: 20,
   boxSizing: "border-box", // Include padding in the width calculation
-  margin: 0,
+  margin: "0 auto",
+  maxWidth: 600,
   [theme.breakpoints.down("sm")]: {
     margin: "0px 40px 0px 40px",
   },

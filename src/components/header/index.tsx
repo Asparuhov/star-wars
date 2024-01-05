@@ -1,68 +1,50 @@
-import * as React from "react";
+// Header.tsx
+import React from "react";
 import { styled, alpha } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
-import InputBase from "@mui/material/InputBase";
-import SearchIcon from "@mui/icons-material/Search";
-import { Avatar, MenuItem, Typography } from "@mui/material";
-import Logo from "../../assets/logo.png";
-import headerOptions from "../../utils/headerOptions.json";
+import {
+  Avatar,
+  MenuItem,
+  Typography,
+  IconButton,
+  Drawer,
+  List,
+  ListItem,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import Logo from "assets/logo.png";
+import { headerOptions } from "utils/headerOptions";
 import { useNavigate } from "react-router-dom";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
-const dataArray = headerOptions as Array<{ name: string; link: string }>;
-
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    marginLeft: theme.spacing(1),
-    width: "auto",
-  },
-}));
-
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  width: "100%",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    [theme.breakpoints.up("sm")]: {
-      width: "12ch",
-      "&:focus": {
-        width: "20ch",
-      },
-    },
-  },
-}));
+const dataArray = headerOptions as Array<{
+  name: string;
+  link: string;
+  icon: any;
+}>;
 
 export const Header: React.FC = () => {
   const navigate = useNavigate();
+  const isMobile = useMediaQuery("(max-width: 1065px)");
+  const [isDrawerOpen, setDrawerOpen] = React.useState(false);
 
   const handleMenuItemClick = (link: string) => {
     navigate(link);
+    if (isMobile) {
+      setDrawerOpen(false);
+    }
   };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed">
+      <AppBar
+        position="fixed"
+        sx={{
+          height: "62px",
+        }}
+      >
         <Toolbar>
           <Avatar
             variant={"rounded"}
@@ -73,28 +55,77 @@ export const Header: React.FC = () => {
               height: 50,
             }}
           />
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon />
-            </SearchIconWrapper>
-            <StyledInputBase
-              placeholder="Search…"
-              inputProps={{ "aria-label": "search" }}
-            />
-          </Search>
-
-          {dataArray.map((option) => {
-            return (
+          {!isMobile &&
+            dataArray.map((option) => (
               <MenuItem
                 key={option.name}
                 onClick={() => handleMenuItemClick(option.link)}
               >
                 <Typography textAlign="center">{option.name}</Typography>
               </MenuItem>
-            );
-          })}
+            ))}
+          {isMobile && (
+            <IconButton
+              color="inherit"
+              onClick={() => setDrawerOpen(!isDrawerOpen)}
+              style={{ marginLeft: "auto" }}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
         </Toolbar>
       </AppBar>
+      <Drawer
+        anchor="right"
+        open={isDrawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        sx={{
+          "&.MuiDrawer-root .MuiDrawer-paper": {
+            marginTop: "62px",
+          },
+        }}
+        slotProps={{ backdrop: { invisible: true } }}
+      >
+        <DrawerContainer>
+          <DrawerList>
+            {dataArray.map((option) => (
+              <DrawerListItem
+                key={option.name}
+                onClick={() => handleMenuItemClick(option.link)}
+              >
+                {React.createElement(option.icon, { fontSize: "small" })}
+                <Typography textAlign="center" sx={{ marginLeft: "8px" }}>
+                  {option.name}
+                </Typography>
+              </DrawerListItem>
+            ))}
+          </DrawerList>
+        </DrawerContainer>
+      </Drawer>
     </Box>
   );
 };
+
+const DrawerContainer = styled("div")(({ theme }) => ({
+  width: 250,
+  backgroundColor: theme.palette.background.paper,
+  height: "100%",
+  display: "flex",
+  flexDirection: "column",
+}));
+
+const DrawerList = styled(List)(() => ({
+  flexGrow: 1,
+  backgroundColor: "#186EC4",
+}));
+
+const DrawerListItem = styled(ListItem)(({ theme }) => ({
+  padding: theme.spacing(2),
+  "&:hover": {
+    backgroundColor: alpha(theme.palette.primary.main, 0.5),
+  },
+  color: "white",
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center", // Center the icon and text vertically
+}));

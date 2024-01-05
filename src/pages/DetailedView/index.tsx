@@ -30,7 +30,7 @@ const DetailedView: React.FC = () => {
         />
       ) : (
         <CircularProgress
-          style={{ margin: "20px auto", display: "block" }}
+          style={{ margin: "100px auto", display: "block" }}
           size={100}
         />
       )}

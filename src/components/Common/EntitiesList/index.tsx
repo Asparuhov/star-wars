@@ -54,27 +54,29 @@ const EntityPage: React.FC<EntityPageProps> = ({
   };
 
   return (
-    <Container>
-      <Grid container spacing={2} mt={10}>
-        {entities.map((entity: any) => (
-          <Grid
-            key={entity.name}
-            item
-            xs={12}
-            sm={6}
-            md={4}
-            lg={3}
-            onClick={() => setCurrentEntity(entity)}
-          >
-            <SmallCard
-              id={getId(entity.url)}
-              type={entityType}
-              name={entity.name || entity.title}
-              age={entity.age}
-              imageUrl={`${imgUrl + getId(entity.url)}.jpg`}
-            />
-          </Grid>
-        ))}
+    <Container sx={{ marginTop: 12 }}>
+      <Grid container spacing={2} justifyContent="center" alignItems="center">
+        {entities.map((entity: any) => {
+          return (
+            <Grid
+              key={entity.name}
+              item
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
+              onClick={() => setCurrentEntity(entity)}
+            >
+              <SmallCard
+                id={getId(entity.url)}
+                type={entityType}
+                name={entity.name || entity.title}
+                age={entity[0]}
+                imageUrl={`${imgUrl + getId(entity.url)}.jpg`}
+              />
+            </Grid>
+          );
+        })}
       </Grid>
       {loadingMore && (
         <CircularProgress
