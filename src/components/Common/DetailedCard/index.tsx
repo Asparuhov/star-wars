@@ -1,5 +1,4 @@
 import React from "react";
-import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -11,20 +10,25 @@ import missingImageSrc from "assets/missingImage.jpg";
 import useDetailedCard from "utils/hooks/useDetailedCard";
 import { formatPropertyName } from "utils/formatPropertyName";
 
+// This component represents a detailed card displaying information about a specific entity.
 export const DetailedCard: React.FC<IDetailedCardProps> = ({
   name,
   imageUrl,
   data,
 }) => {
+  // React router hook for navigation
   const navigate = useNavigate();
+  // Custom hook to fetch related entities for this detailed card
   const { fetchedEntities } = useDetailedCard(data);
 
   // Render individual property based on key and value
   const renderProperty = (key: string, value: any) => {
+    // Do not render if the key is "url" or the value is an object
     if (key === "url" || typeof value === "object") {
       return null;
     }
 
+    // Render special formatting for "height" and "mass" properties
     if (key === "height" || key === "mass") {
       return (
         <Typography key={key}>
@@ -35,6 +39,7 @@ export const DetailedCard: React.FC<IDetailedCardProps> = ({
       );
     }
 
+    // Render date formatting for "created" and "edited" properties
     if ((key === "created" || key === "edited") && typeof value === "string") {
       const date = new Date(value);
       return (
@@ -46,8 +51,8 @@ export const DetailedCard: React.FC<IDetailedCardProps> = ({
       );
     }
 
+    // Render hyperlinks for URLs
     if (typeof value === "string" && value.toLowerCase().includes("https://")) {
-      // Render hyperlinks for URLs
       return (
         <Typography key={key}>
           {`${formatPropertyName(key)}: `}
@@ -68,6 +73,7 @@ export const DetailedCard: React.FC<IDetailedCardProps> = ({
       );
     }
 
+    // Default rendering for other property types
     return (
       <Typography key={key}>{`${formatPropertyName(
         key
@@ -75,9 +81,12 @@ export const DetailedCard: React.FC<IDetailedCardProps> = ({
     );
   };
 
+  // JSX structure for the detailed card component
   return (
     <>
+      {/* Main detailed card */}
       <StyledCard>
+        {/* Card content section */}
         <CardContent sx={{ flex: "1 0 auto" }}>
           <Typography component="div" variant="h5" textAlign="center">
             {name}
@@ -99,11 +108,13 @@ export const DetailedCard: React.FC<IDetailedCardProps> = ({
           }}
         />
       </StyledCard>
+      {/* Additional entities fetched by the useDetailedCard hook */}
       {<ArrayBoxes>{fetchedEntities}</ArrayBoxes>}
     </>
   );
 };
 
+// Styling for the main detailed card component
 const StyledCard = styled(Card)(({ theme }) => ({
   display: "flex",
   flexDirection: "row", // Display in a row on large screens
@@ -118,6 +129,7 @@ const StyledCard = styled(Card)(({ theme }) => ({
   },
 }));
 
+// Styling for the container of additional entities fetched by the useDetailedCard hook
 const ArrayBoxes = styled("div")(({ theme }) => ({
   display: "flex",
   flexWrap: "wrap",

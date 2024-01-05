@@ -39,6 +39,7 @@ export const SmallCard: React.FC<ICardProps> = ({
         sx={{ width: 161, height: 151 }}
         image={imageUrl}
         alt={name}
+        //on missing image, add a default one
         onError={(e: React.SyntheticEvent<HTMLImageElement, Event>) => {
           const target = e.target as HTMLImageElement;
           target.src = missingImageSrc;

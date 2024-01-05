@@ -24,6 +24,5 @@ export const searchIcons = [
   {
     name: "Species",
     icon: EmojiNatureIcon,
-  }
-
+  },
 ];

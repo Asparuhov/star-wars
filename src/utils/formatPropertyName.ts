@@ -1,3 +1,4 @@
+//helper function to remove dashes and replace it with empty space
 export const formatPropertyName = (propertyName: string) => {
   return propertyName
     .split("_")

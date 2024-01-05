@@ -12,6 +12,7 @@ import CommuteIcon from "@mui/icons-material/Commute";
 import EmojiNatureIcon from "@mui/icons-material/EmojiNature";
 import EntitiesList from "components/Common/EntitiesList";
 
+// Icons for different search categories
 const categoryIcons: any = {
   Planets: <PublicIcon />,
   People: <PeopleAltIcon />,
@@ -20,6 +21,7 @@ const categoryIcons: any = {
   Species: <EmojiNatureIcon />,
 };
 
+// API endpoints for different search categories
 const apiEndpoints: any = {
   People: "https://swapi.dev/api/people/",
   Planets: "https://swapi.dev/api/planets/",
@@ -28,45 +30,26 @@ const apiEndpoints: any = {
   Vehicles: "https://swapi.dev/api/vehicles/",
 };
 
-const SearchWrapper = styled("div")(({ theme }) => ({
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: "#1976d2",
-  "&:hover": {
-    backgroundColor: alpha("#1976d2", 0.85),
-  },
-  textAlign: "center",
-  height: "50px",
-  margin: "130px auto 0px auto",
-  width: 600,
-  [theme.breakpoints.down("sm")]: {
-    width: 350,
-  },
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "white",
-  width: "100%",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-  },
-}));
-
+// Main component for the search bar
 const SearchBar: React.FC = () => {
+  // State to manage the selected search category
   const [searchMode, setSearchMode] = useState("People");
+  // State to store search results
   const [searchResults, setSearchResults] = useState<any[]>([]);
+  // Ref to store the search input value
   const searchValueRef = useRef<string | null>(null);
+  // State to track whether the search has been triggered
   const [searchTriggered, setSearchTriggered] = useState(false);
-  const [searchButtonClicked, setSearchButtonClicked] = useState(false); // New state
+  // State to track whether the search button has been clicked
+  const [searchButtonClicked, setSearchButtonClicked] = useState(false);
 
+  // Function to handle the change in search category
   const handleModeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSearchMode(event.target.value as string);
     setSearchButtonClicked(false); // Reset the search button click status
   };
 
+  // Function to handle the search button click
   const handleSearch = () => {
     if (
       searchMode !== "All" &&
@@ -91,9 +74,12 @@ const SearchBar: React.FC = () => {
     setSearchButtonClicked(true); // Set search button click status to true
   };
 
+  // JSX structure for rendering the search bar
   return (
     <Container>
+      {/* Styled search bar wrapper */}
       <SearchWrapper>
+        {/* Styled input for search */}
         <StyledInputBase
           placeholder={`Search ${searchMode.toLowerCase()}...`}
           inputProps={{ "aria-label": "search" }}
@@ -101,6 +87,7 @@ const SearchBar: React.FC = () => {
             searchValueRef.current = event.target.value;
           }}
         />
+        {/* Styled select dropdown for search category */}
         <Select
           value={searchMode}
           onChange={(e: any) => handleModeChange(e)}
@@ -112,12 +99,14 @@ const SearchBar: React.FC = () => {
             height: "45px",
           }}
         >
+          {/* Map through category icons to render menu items */}
           {Object.keys(categoryIcons).map((category) => (
             <MenuItem key={category} value={category}>
               {categoryIcons[category]} {category}
             </MenuItem>
           ))}
         </Select>
+        {/* Styled search button */}
         <Button
           variant="contained"
           onClick={() => handleSearch()}
@@ -126,6 +115,7 @@ const SearchBar: React.FC = () => {
           Search
         </Button>
       </SearchWrapper>
+      {/* Conditional rendering of search results */}
       {searchResults.length > 0 && (
         <div
           style={{
@@ -138,6 +128,7 @@ const SearchBar: React.FC = () => {
           }}
         ></div>
       )}
+      {/* EntitiesList component for displaying search results */}
       <EntitiesList
         entityType={searchMode}
         dataUrl={`${apiEndpoints[searchMode]}?search=${
@@ -151,3 +142,32 @@ const SearchBar: React.FC = () => {
 };
 
 export default SearchBar;
+
+// Styled component for the search bar wrapper
+const SearchWrapper = styled("div")(({ theme }) => ({
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: "#1976d2",
+  "&:hover": {
+    backgroundColor: alpha("#1976d2", 0.85),
+  },
+  textAlign: "center",
+  height: "50px",
+  margin: "130px auto 0px auto",
+  width: 600,
+  [theme.breakpoints.down("sm")]: {
+    width: 350,
+  },
+}));
+
+// Styled component for the search input
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: "white",
+  width: "100%",
+  "& .MuiInputBase-input": {
+    padding: theme.spacing(1, 1, 1, 0),
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+  },
+}));

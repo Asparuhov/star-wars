@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Container, Grid, CircularProgress, Button } from "@mui/material";
 import { SmallCard } from "components/Common/SmallCard";
-import { useEntityContext } from "contexts/entity";
 import { getId } from "utils/getId";
 
 interface EntitiesListProps {
@@ -18,18 +17,23 @@ const EntitiesList: React.FC<EntitiesListProps> = ({
   dataUrl,
   imgUrl,
   searchTriggered = false,
-  fetchDataOnMount = false, // Set to false by default
+  fetchDataOnMount = false,
 }) => {
+  // State to store the list of entities
   const [entities, setEntities] = useState<Array<any>>([]);
+  // State to track loading state during data fetching
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
+  // State to store the URL for the next page of entities
   const [nextPage, setNextPage] = useState<string | null>(null);
-  const { setCurrentEntity } = useEntityContext();
 
+  // useEffect hook to fetch data based on props and triggers
   useEffect(() => {
+    // Fetch data on mount if specified
     if (fetchDataOnMount) {
-      // Fetch data on mount
       fetchData(dataUrl);
-    } else if (searchTriggered) {
+    }
+    // Fetch data when a search is triggered
+    else if (searchTriggered) {
       // Clear entities when search is triggered
       setEntities([]);
       setNextPage(null);
@@ -37,18 +41,23 @@ const EntitiesList: React.FC<EntitiesListProps> = ({
     }
   }, [dataUrl, searchTriggered, fetchDataOnMount]);
 
+  // Function to fetch data from the specified URL
   const fetchData = (url: string) => {
     setLoadingMore(true);
     axios
       .get(url)
       .then((res: any) => {
         setEntities((prevEntities) => {
+          // Append new entities to the existing list
           if (nextPage) {
             return [...prevEntities, ...res.data.results];
-          } else {
+          }
+          // Set the entities to the new list if no pagination
+          else {
             return res.data.results;
           }
         });
+        // Update the URL for the next page
         setNextPage(res.data.next);
       })
       .catch((error: any) => {
@@ -59,15 +68,18 @@ const EntitiesList: React.FC<EntitiesListProps> = ({
       });
   };
 
+  // Function to handle loading more entities on button click
   const handleLoadMore = () => {
     if (nextPage) {
       fetchData(nextPage);
     }
   };
 
+  // JSX structure for rendering the list of entities
   return (
     <Container sx={{ marginTop: 12 }}>
       <Grid container spacing={2} justifyContent="center" alignItems="center">
+        {/* Map through the list of entities and render SmallCard components */}
         {entities.map((entity: any) => {
           return (
             <Grid
@@ -77,7 +89,6 @@ const EntitiesList: React.FC<EntitiesListProps> = ({
               sm={6}
               md={4}
               lg={3}
-              onClick={() => setCurrentEntity(entity)}
             >
               <SmallCard
                 id={getId(entity.url)}
@@ -90,12 +101,14 @@ const EntitiesList: React.FC<EntitiesListProps> = ({
           );
         })}
       </Grid>
+      {/* Loading spinner while fetching more entities */}
       {loadingMore && (
         <CircularProgress
           style={{ margin: "20px auto", display: "block" }}
           size={100}
         />
       )}
+      {/* Button to load more entities if there is a next page */}
       {nextPage && !loadingMore && (
         <Button
           variant="contained"

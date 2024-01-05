@@ -15,24 +15,9 @@ type ExchangeRates = {
   [key in currencies]: number;
 };
 
-const StyledContainer = styled(Container)(({ theme }) => ({
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  justifyContent: "center",
-  width: 600,
-  height: 640,
-  [theme.breakpoints.down("sm")]: {
-    width: 400,
-    marginTop: 65,
-  },
-  marginTop: 100,
-  backgroundColor: "white",
-  borderRadius: "8px",
-}));
-
 const GalacticTradeCalculator = () => {
   const initialExchangeRates: ExchangeRates = {
+    //defautl currency value
     [currencies.GALACTICCREDITS]: 1.0,
     [currencies.WUPIUPI]: 2.5,
     [currencies.PEGGATS]: 0.8,
@@ -163,6 +148,24 @@ const GalacticTradeCalculator = () => {
   );
 };
 
+export default GalacticTradeCalculator;
+
+const StyledContainer = styled(Container)(({ theme }) => ({
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  width: 600,
+  height: 640,
+  [theme.breakpoints.down("sm")]: {
+    width: 400,
+    marginTop: 65,
+  },
+  marginTop: 100,
+  backgroundColor: "white",
+  borderRadius: "8px",
+}));
+
 const ButtonContainer = styled("div")({
   display: "flex",
   justifyContent: "center",
@@ -170,5 +173,3 @@ const ButtonContainer = styled("div")({
   flexDirection: "row",
   gap: 38,
 });
-
-export default GalacticTradeCalculator;

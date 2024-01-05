@@ -1,3 +1,4 @@
+// Import necessary React hooks and components from external libraries
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
@@ -12,18 +13,25 @@ type IDataType = {
   [key: string]: any;
 };
 
+// Custom hook to fetch and render detailed information about related entities
 const useDetailedCard = (data: IDataType) => {
+  // Extract the "id" parameter from the route
   const { id } = useParams();
+  // State to store the rendered entities as React nodes
   const [fetchedEntities, setFetchedEntities] = useState<React.ReactNode[]>([]);
+  // Access the navigation function from React Router
   const navigate = useNavigate();
 
+  // Function to fetch and render entities based on the provided data
   const fetchAndRenderEntities = async () => {
+    // Map over the data entries to create an array of promises for each entity type
     const entityPromises = Object.entries(data)
       .filter(
         ([key, value]) =>
           Array.isArray(value) && value.length > 0 && key !== "films"
       )
       .map(async ([key, value]) => {
+        // Fetch data for each entity in parallel using Promise.all
         const entitiesData = await Promise.all(
           value.map(async (endpoint: string) => {
             try {
@@ -36,6 +44,7 @@ const useDetailedCard = (data: IDataType) => {
           })
         );
 
+        // Map over the fetched data to create React nodes for each entity
         const entities = entitiesData
           .filter((data) => data !== null)
           .map((data, index) => (
@@ -46,7 +55,7 @@ const useDetailedCard = (data: IDataType) => {
                 color="secondary"
                 sx={{ display: "inline", ":hover": { cursor: "pointer" } }}
                 onClick={() => {
-                  // Assuming navigate and window.location.reload are available
+                  // Navigate to the linked entity and reload the page
                   navigate(
                     `/${value[index]
                       .split("/")
@@ -62,6 +71,7 @@ const useDetailedCard = (data: IDataType) => {
             </Typography>
           ));
 
+        // Create a container for the entities and their type
         return (
           <ArrayContainer key={key}>
             <Typography variant="h6">{formatPropertyName(key)}</Typography>
@@ -70,9 +80,11 @@ const useDetailedCard = (data: IDataType) => {
         );
       });
 
+    // Set the state with the rendered entities once all promises are resolved
     setFetchedEntities(await Promise.all(entityPromises));
   };
 
+  // Use useEffect to trigger the fetchAndRenderEntities function when the "id" changes
   useEffect(() => {
     fetchAndRenderEntities();
   }, [id]);

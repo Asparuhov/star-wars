@@ -1,6 +1,6 @@
 // Header.tsx
 import React from "react";
-import { styled, alpha } from "@mui/material/styles";
+import { styled, alpha } from "@mui/system";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -25,7 +25,7 @@ const dataArray = headerOptions as Array<{
   icon: any;
 }>;
 
-export const Header: React.FC = () => {
+const Header: React.FC = () => {
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width: 1065px)");
   const [isDrawerOpen, setDrawerOpen] = React.useState(false);
@@ -38,43 +38,30 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar
-        position="fixed"
-        sx={{
-          height: "62px",
-        }}
-      >
+    <HeaderContainer>
+      <StyledAppBar>
         <Toolbar>
-          <Avatar
-            variant={"rounded"}
-            alt="The image"
-            src={Logo}
-            style={{
-              width: 100,
-              height: 50,
-            }}
-          />
+          <StyledAvatar variant={"rounded"} alt="The image" src={Logo} />
           {!isMobile &&
             dataArray.map((option) => (
               <MenuItem
                 key={option.name}
                 onClick={() => handleMenuItemClick(option.link)}
               >
-                <Typography textAlign="center">{option.name}</Typography>
+                <MenuItemTypography>{option.name}</MenuItemTypography>
               </MenuItem>
             ))}
           {isMobile && (
             <IconButton
               color="inherit"
               onClick={() => setDrawerOpen(!isDrawerOpen)}
-              style={{ marginLeft: "auto" }}
+              sx={{ marginLeft: "auto" }}
             >
               <MenuIcon />
             </IconButton>
           )}
         </Toolbar>
-      </AppBar>
+      </StyledAppBar>
       <Drawer
         anchor="right"
         open={isDrawerOpen}
@@ -94,17 +81,19 @@ export const Header: React.FC = () => {
                 onClick={() => handleMenuItemClick(option.link)}
               >
                 {React.createElement(option.icon, { fontSize: "small" })}
-                <Typography textAlign="center" sx={{ marginLeft: "8px" }}>
+                <MenuItemTypography sx={{ marginLeft: "8px" }}>
                   {option.name}
-                </Typography>
+                </MenuItemTypography>
               </DrawerListItem>
             ))}
           </DrawerList>
         </DrawerContainer>
       </Drawer>
-    </Box>
+    </HeaderContainer>
   );
 };
+
+export default Header;
 
 const DrawerContainer = styled("div")(({ theme }) => ({
   width: 250,
@@ -114,10 +103,10 @@ const DrawerContainer = styled("div")(({ theme }) => ({
   flexDirection: "column",
 }));
 
-const DrawerList = styled(List)(() => ({
+const DrawerList = styled(List)({
   flexGrow: 1,
   backgroundColor: "#186EC4",
-}));
+});
 
 const DrawerListItem = styled(ListItem)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -127,5 +116,23 @@ const DrawerListItem = styled(ListItem)(({ theme }) => ({
   color: "white",
   cursor: "pointer",
   display: "flex",
-  alignItems: "center", // Center the icon and text vertically
+  alignItems: "center",
 }));
+
+const HeaderContainer = styled(Box)({
+  flexGrow: 1,
+});
+
+const StyledAppBar = styled(AppBar)({
+  position: "fixed",
+  height: "62px",
+});
+
+const StyledAvatar = styled(Avatar)({
+  width: 100,
+  height: 50,
+});
+
+const MenuItemTypography = styled(Typography)({
+  textAlign: "center",
+});
