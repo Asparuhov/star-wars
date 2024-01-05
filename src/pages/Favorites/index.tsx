@@ -32,7 +32,7 @@ const FavoritesPage: React.FC = () => {
         My Favorites
       </Typography>
       {favorites.length === 0 ? (
-        <Typography variant="h6" align="center">
+        <Typography variant="h6" align="center" sx={{ color: "white" }}>
           You haven't added any favorites yet.
         </Typography>
       ) : (
