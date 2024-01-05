@@ -73,7 +73,7 @@ const SearchBar: React.FC = () => {
 
     setSearchButtonClicked(true); // Set search button click status to true
   };
-
+  console.log(searchMode);
   // JSX structure for rendering the search bar
   return (
     <Container>
@@ -134,7 +134,9 @@ const SearchBar: React.FC = () => {
         dataUrl={`${apiEndpoints[searchMode]}?search=${
           searchValueRef.current || ""
         }`}
-        imgUrl={"imgUR"}
+        imgUrl={`https://starwars-visualguide.com/assets/img/${
+          searchMode === "People" ? "characters" : searchMode.toLowerCase()
+        }`}
         searchTriggered={searchTriggered && searchButtonClicked} // Check both conditions
       />
     </Container>

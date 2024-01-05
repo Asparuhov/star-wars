@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Container, Grid, CircularProgress, Button } from "@mui/material";
+import {
+  Container,
+  Grid,
+  CircularProgress,
+  Button,
+  Typography,
+} from "@mui/material";
 import { SmallCard } from "components/Common/SmallCard";
 import { getId } from "utils/getId";
 
@@ -9,7 +15,7 @@ interface EntitiesListProps {
   dataUrl: string;
   imgUrl: string;
   searchTriggered?: boolean;
-  fetchDataOnMount?: boolean; // New prop for fetching data on mount
+  fetchDataOnMount?: boolean;
 }
 
 const EntitiesList: React.FC<EntitiesListProps> = ({
@@ -19,96 +25,90 @@ const EntitiesList: React.FC<EntitiesListProps> = ({
   searchTriggered = false,
   fetchDataOnMount = false,
 }) => {
-  // State to store the list of entities
   const [entities, setEntities] = useState<Array<any>>([]);
-  // State to track loading state during data fetching
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
-  // State to store the URL for the next page of entities
   const [nextPage, setNextPage] = useState<string | null>(null);
+  const [searchError, setSearchError] = useState<boolean>(false);
 
-  // useEffect hook to fetch data based on props and triggers
   useEffect(() => {
-    // Fetch data on mount if specified
     if (fetchDataOnMount) {
       fetchData(dataUrl);
-    }
-    // Fetch data when a search is triggered
-    else if (searchTriggered) {
-      // Clear entities when search is triggered
+    } else if (searchTriggered) {
       setEntities([]);
       setNextPage(null);
+      setSearchError(false); // Set searchError to false on searchTriggered
       fetchData(dataUrl);
     }
   }, [dataUrl, searchTriggered, fetchDataOnMount]);
 
-  // Function to fetch data from the specified URL
   const fetchData = (url: string) => {
     setLoadingMore(true);
     axios
       .get(url)
       .then((res: any) => {
         setEntities((prevEntities) => {
-          // Append new entities to the existing list
           if (nextPage) {
             return [...prevEntities, ...res.data.results];
-          }
-          // Set the entities to the new list if no pagination
-          else {
+          } else {
             return res.data.results;
           }
         });
-        // Update the URL for the next page
         setNextPage(res.data.next);
       })
       .catch((error: any) => {
         console.error(`Error fetching ${entityType} data:`, error);
+        setSearchError(true);
       })
       .finally(() => {
         setLoadingMore(false);
       });
   };
 
-  // Function to handle loading more entities on button click
   const handleLoadMore = () => {
     if (nextPage) {
       fetchData(nextPage);
     }
   };
-
-  // JSX structure for rendering the list of entities
+  console.log(imgUrl);
+  
   return (
     <Container sx={{ marginTop: 12 }}>
       <Grid container spacing={2} justifyContent="center" alignItems="center">
-        {/* Map through the list of entities and render SmallCard components */}
+        {entities.length === 0 && !loadingMore && !searchError && searchTriggered && (
+          <Typography
+            variant="h6"
+            textAlign="center"
+            color="error"
+            mb={5}
+            mt={-5}
+          >
+            No results found.
+          </Typography>
+        )}
+
         {entities.map((entity: any) => {
+          console.log(`${imgUrl + getId(entity.url)}.jpg`);
           return (
-            <Grid
-              key={entity.name}
-              item
-              xs={12}
-              sm={6}
-              md={4}
-              lg={3}
-            >
+            <Grid key={entity.name} item xs={12} sm={6} md={4} lg={3}>
               <SmallCard
                 id={getId(entity.url)}
-                type={entityType}
+                type={entityType.toLowerCase()}
                 name={entity.name || entity.title}
                 age={entity[0]}
-                imageUrl={`${imgUrl + getId(entity.url)}.jpg`}
+                imageUrl={`${imgUrl}/${getId(entity.url)}.jpg`}
               />
             </Grid>
           );
         })}
       </Grid>
-      {/* Loading spinner while fetching more entities */}
+
       {loadingMore && (
         <CircularProgress
           style={{ margin: "20px auto", display: "block" }}
           size={100}
         />
       )}
-      {/* Button to load more entities if there is a next page */}
+
       {nextPage && !loadingMore && (
         <Button
           variant="contained"
