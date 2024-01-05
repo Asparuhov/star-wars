@@ -1,48 +1,52 @@
-# client
 
-<div align="center" style="margin: 30px;">
-    <a href="https://refine.dev">
-    <img alt="refine logo" src="https://refine.ams3.cdn.digitaloceanspaces.com/readme/refine-readme-banner.png">
-    </a>
-</div>
-<br/>
+# WELCOME TO THE STAR WARS UNIVERSE
 
-This [Refine](https://github.com/refinedev/refine) project was generated with [create refine-app](https://github.com/refinedev/refine/tree/master/packages/create-refine-app).
+### This project is all about the star wars universe, you can explore different people, planets, species, starships, vehicles, the relations between them, which person owns which vehicles, which planet is someone from, the statistics of the planet, population etc. and many many more. If you are a Star Wars fan, this applicaiton could keep you occupied for hours.
 
-## Getting Started
+## Technologies:
 
-A React Framework for building internal tools, admin panels, dashboards & B2B apps with unmatched flexibility ✨
+### Initialization:
+The project is initialized using the refine.dev framework
 
-Refine's hooks and components simplifies the development process and eliminates the repetitive tasks by providing industry-standard solutions for crucial aspects of a project, including authentication, access control, routing, networking, state management, and i18n.
+### Core logic:
+The App is based on React with Typescript
 
-## Available Scripts
+### UI:
+The App's interactive UI and DX is made with Material UI
 
-### Running the development server.
+## How to run the project:
+
+### Install the dependencies:
+
+```bash
+    npm install
+```
+
+### Start the server.
 
 ```bash
     npm run dev
 ```
 
-### Building for production.
+### Head to localhost:3000 to see the ran project.
 
-```bash
-    npm run build
-```
 
-### Running the production server.
+## Features
 
-```bash
-    npm run start
-```
+### Searching feature
+When you enter the home page, right off the start, you will see a search bar, in which you can choose a category from all of the avaialble entities in the Star Wars universe and search them by their name, from the results you can dive deeply into the entity's relations tree.
 
-## Learn More
+### Entity page
+Each entity will have their own page in which you can take a look, click on them, learn more about their being, add them to favorites, or why not check what relations they have.
 
-To learn more about **Refine**, please check out the [Documentation](https://refine.dev/docs)
+### Image for every entity
+Swapi.dev doesn't provide us with images from their entities, so what I did is align swapi's api with starwars-visualguide.com's CDN API, so I can give you images of EVERY SINGLE entity on the application, which makes the site feel more alive.
 
-- **REST Data Provider** [Docs](https://refine.dev/docs/core/providers/data-provider/#overview)
-- **Material UI** [Docs](https://refine.dev/docs/ui-frameworks/mui/tutorial/)
-- **React Router** [Docs](https://refine.dev/docs/core/providers/router-provider/)
+### Responsive design
+All pages and views work on all types of devices, from the smallest to the biggest.
 
-## License
+### Favorites
+When you enter the detailed profile of some entity, you can press the heart icon to add them to your favorites, which will be saved the next time you enter the site, because it uses localStorage to persist your favorites.
 
-MIT
+### Galactic Trade Calculator 
+One of the most intriguing features of the app is the Galactic Trade Exchanger, aptly named for its role in simulating interstellar currency exchange. It introduces fictional currencies, each subject to a dynamic market influenced by simulated demand and supply. What makes this feature particularly fascinating is its incorporation of a REAL TIME CHART. Every move that is made on the chosen currency, will be seen on the chat in real time.
