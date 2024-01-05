@@ -48,5 +48,8 @@ All pages and views work on all types of devices, from the smallest to the bigge
 ### Favorites
 When you enter the detailed profile of some entity, you can press the heart icon to add them to your favorites, which will be saved the next time you enter the site, because it uses localStorage to persist your favorites.
 
+### Random Memes Generator
+I also added as a filler for the home page a random Star Wars meme Generator, so the home page feels more alive when you haven't searched for anything yet.
+
 ### Galactic Trade Calculator 
 One of the most intriguing features of the app is the Galactic Trade Exchanger, aptly named for its role in simulating interstellar currency exchange. It introduces fictional currencies, each subject to a dynamic market influenced by simulated demand and supply. What makes this feature particularly fascinating is its incorporation of a REAL TIME CHART. Every move that is made on the chosen currency, will be seen on the chat in real time.
