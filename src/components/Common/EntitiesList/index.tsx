@@ -12,10 +12,11 @@ import { getId } from "utils/getId";
 
 interface EntitiesListProps {
   entityType: string;
-  dataUrl: string;
+  dataUrl: string; // Replace this placeholder with the actual value
   imgUrl: string;
   searchTriggered?: boolean;
   fetchDataOnMount?: boolean;
+  resetEntitiesList?: boolean; // Make it optional
 }
 
 const EntitiesList: React.FC<EntitiesListProps> = ({
@@ -24,6 +25,7 @@ const EntitiesList: React.FC<EntitiesListProps> = ({
   imgUrl,
   searchTriggered = false,
   fetchDataOnMount = false,
+  resetEntitiesList,
 }) => {
   const [entities, setEntities] = useState<Array<any>>([]);
   const [loadingMore, setLoadingMore] = useState<boolean>(false);
@@ -31,15 +33,16 @@ const EntitiesList: React.FC<EntitiesListProps> = ({
   const [searchError, setSearchError] = useState<boolean>(false);
 
   useEffect(() => {
-    if (fetchDataOnMount) {
-      fetchData(dataUrl);
-    } else if (searchTriggered) {
+    if (resetEntitiesList) {
       setEntities([]);
       setNextPage(null);
-      setSearchError(false); // Set searchError to false on searchTriggered
-      fetchData(dataUrl);
+      setSearchError(false);
     }
-  }, [dataUrl, searchTriggered, fetchDataOnMount]);
+
+    if (fetchDataOnMount || (searchTriggered && !resetEntitiesList)) {
+      fetchData(dataUrl); // Replace this placeholder with the actual value
+    }
+  }, [dataUrl, searchTriggered, fetchDataOnMount, resetEntitiesList]);
 
   const fetchData = (url: string) => {
     setLoadingMore(true);
@@ -70,21 +73,24 @@ const EntitiesList: React.FC<EntitiesListProps> = ({
     }
   };
   console.log(imgUrl);
-  
+
   return (
     <Container sx={{ marginTop: 12 }}>
       <Grid container spacing={2} justifyContent="center" alignItems="center">
-        {entities.length === 0 && !loadingMore && !searchError && searchTriggered && (
-          <Typography
-            variant="h6"
-            textAlign="center"
-            color="error"
-            mb={5}
-            mt={-5}
-          >
-            No results found.
-          </Typography>
-        )}
+        {entities.length === 0 &&
+          !loadingMore &&
+          !searchError &&
+          searchTriggered && (
+            <Typography
+              variant="h6"
+              textAlign="center"
+              color="error"
+              mb={5}
+              mt={-5}
+            >
+              No results found.
+            </Typography>
+          )}
 
         {entities.map((entity: any) => {
           console.log(`${imgUrl + getId(entity.url)}.jpg`);

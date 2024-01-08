@@ -42,10 +42,13 @@ const SearchBar: React.FC = () => {
   const [searchTriggered, setSearchTriggered] = useState(false);
   // State to track whether the search button has been clicked
   const [searchButtonClicked, setSearchButtonClicked] = useState(false);
+  // State to indicate whether to reset the EntitiesList
+  const [resetEntitiesList, setResetEntitiesList] = useState(false);
 
   // Function to handle the change in search category
   const handleModeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSearchMode(event.target.value as string);
+    setResetEntitiesList(true); // Set the flag to reset EntitiesList
     setSearchButtonClicked(false); // Reset the search button click status
   };
 
@@ -72,6 +75,7 @@ const SearchBar: React.FC = () => {
     }
 
     setSearchButtonClicked(true); // Set search button click status to true
+    setResetEntitiesList(false); // Reset the flag to reset EntitiesList
   };
   console.log(searchMode);
   // JSX structure for rendering the search bar
@@ -138,6 +142,7 @@ const SearchBar: React.FC = () => {
           searchMode === "People" ? "characters" : searchMode.toLowerCase()
         }`}
         searchTriggered={searchTriggered && searchButtonClicked} // Check both conditions
+        resetEntitiesList={resetEntitiesList} // Pass the flag to reset EntitiesList
       />
     </Container>
   );
